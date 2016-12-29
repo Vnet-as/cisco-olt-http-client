@@ -2,6 +2,21 @@
 import xmltodict
 
 
+class OperationResult:
+
+    def __init__(self, response):
+        self.response = response
+        self.data = xmltodict.parse(response.content)
+
+    @property
+    def error(self):
+        return int(self.error_code) != 0
+
+    @property
+    def error_code(self):
+        return self.data['response']['operation']['result']['error']
+
+
 class Operation(object):
     '''Base class for API operations'''
 
@@ -65,8 +80,8 @@ class Operation(object):
         response = self.client._req(
             url=self.url,
             data=xmltodict.unparse(self.get_data(data=data)))
-        return xmltodict.parse(response.content)
+        return OperationResult(response)
 
 
 class ShowEquipmentOp(Operation):
-    op_data = {'@entity': 'equipment', 'equipment': {'@id': 0}}
+    op_data = {'@entity': 'equipment', 'equipment': None}
