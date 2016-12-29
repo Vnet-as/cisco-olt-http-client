@@ -27,13 +27,13 @@ class Client(object):
             'button': 'Login', 'textfield': 'UX_EQUIPNAME',
         }
         response = self._req('login.htm', data=login_data)
-        response.raise_for_status()
         return response
 
     def _req(self, url, **options):
         url = urljoin(self.base_url, url)
         LOGGER.debug('Request to: %s with options: %s', url, options)
         response = self.session.post(url, **options)
+        response.raise_for_status()
         LOGGER.debug(
             'Response status: %s content: %s',
             response.status_code, response.content)
