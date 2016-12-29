@@ -53,10 +53,18 @@ class Operation(object):
     def get_op_data(self):
         return self.op_data.copy()
 
-    def execute(self):
+    def execute(self, data=None):
+        '''
+        Execute API request operation with given operation ``data``
+
+        :param data: Operation related data pased to ``get_data`` method
+        :type data: dict or None
+
+        :returns: Parsed API response as dictionary
+        '''
         response = self.client._req(
             url=self.url,
-            data=xmltodict.unparse(self.get_data()))
+            data=xmltodict.unparse(self.get_data(data=data)))
         return xmltodict.parse(response.content)
 
 
