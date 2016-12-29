@@ -11,6 +11,7 @@ class Operation(object):
 
     url = '/cgi-bin/xml-parser.cgi'
     op_type = 'show'
+    op_data = {}
 
     def __init__(self, client):
         self.client = client
@@ -25,14 +26,27 @@ class Operation(object):
             }
         }
 
-    def get_operation_data(self):
-        raise NotImplementedError()
+    def get_data(self, data):
+        '''
+        :param data: Data to merge with operation data
+        :type data: dict
+
+        :returns: full operation data structure
+        '''
+        base_data = self.get_base_data()
+        op_data = self.get_op_data()
+        op_data.update(data)
+        base_data['request']['operation'].update(op_data)
+        return base_data
 
     def get_token(self):
         return self.client.token
 
     def get_type(self):
         return self.op_type
+
+    def get_op_data(self):
+        return self.op_data.copy()
 
     def execute(self):
         response = self.client._req(
@@ -42,13 +56,7 @@ class Operation(object):
 
 
 class ShowEquipmentOp(Operation):
-
-    def get_operation_data(self, **data):
-        base_data = self.get_base_data()
-        op_data = {'@entity': 'equipment', 'equipment': {'@id': 0}}
-        op_data.update(data)
-        base_data['request']['operation'].update(op_data)
-        return base_data
+    op_data = {'@entity': 'equipment', 'equipment': {'@id': 0}}
 
 
 class Client(object):
