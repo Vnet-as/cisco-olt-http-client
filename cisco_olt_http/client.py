@@ -34,5 +34,7 @@ class Client(object):
         url = urljoin(self.base_url, url)
         LOGGER.debug('Request to: %s with options: %s', url, options)
         response = self.session.post(url, **options)
-        LOGGER.debug('Response status: %s content: %s', response.status_code, response.content)
+        LOGGER.debug(
+            'Response status: %s content: %s',
+            response.status_code, response.content)
         return response
