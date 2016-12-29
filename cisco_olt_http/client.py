@@ -26,7 +26,7 @@ class Operation(object):
             }
         }
 
-    def get_data(self, data):
+    def get_data(self, data=None):
         '''
         :param data: Data to merge with operation data
         :type data: dict
@@ -35,7 +35,7 @@ class Operation(object):
         '''
         base_data = self.get_base_data()
         op_data = self.get_op_data()
-        op_data.update(data)
+        op_data.update(data if data else {})
         base_data['request']['operation'].update(op_data)
         return base_data
 
@@ -51,7 +51,7 @@ class Operation(object):
     def execute(self):
         response = self.client._req(
             url=self.url,
-            data=xmltodict.unparse(self.get_operation_data()))
+            data=xmltodict.unparse(self.get_data()))
         return xmltodict.parse(response.content)
 
 
