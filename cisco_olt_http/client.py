@@ -13,7 +13,12 @@ class Client(object):
         self.base_url = base_url
         self.session = requests.Session()
         # token is incremented before each operation
-        self.token = -1
+        self._token = -1
+
+    @property
+    def token(self):
+        self._token += 1
+        return self._token
 
     def login(self, username, password):
         login_data = {
@@ -24,11 +29,6 @@ class Client(object):
         response = self._req('login.htm', data=login_data)
         response.raise_for_status()
         return response
-
-    def _op(self, op, incr_token=True):
-        if incr_token is True:
-            self.token += 1
-        return op.execute()
 
     def _req(self, url, **options):
         url = urljoin(self.base_url, url)
