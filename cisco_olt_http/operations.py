@@ -60,12 +60,15 @@ class Operation(object):
         return base_data
 
     def get_token(self):
+        '''Get token for the operation'''
         return self.client.token
 
     def get_type(self):
+        '''Get type of operation. ``show``, ``config`` etc.'''
         return self.op_type
 
     def get_op_data(self):
+        '''Returns operation related data bundle'''
         return self.op_data.copy()
 
     def execute(self, data=None):
