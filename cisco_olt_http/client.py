@@ -10,7 +10,7 @@ class Operation(object):
     '''Base class for API operations'''
 
     url = '/cgi-bin/xml-parser.cgi'
-    type = 'show'
+    op_type = 'show'
 
     def __init__(self, client):
         self.client = client
@@ -32,7 +32,7 @@ class Operation(object):
         return self.client.token
 
     def get_type(self):
-        return self.type
+        return self.op_type
 
     def execute(self):
         response = self.client._req(
