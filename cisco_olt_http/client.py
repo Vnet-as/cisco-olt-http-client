@@ -14,6 +14,9 @@ LOGGER = logging.getLogger('cisco_olt_http.client')
 class Client(object):
 
     def __init__(self, base_url):
+        '''
+        :param base_url: OLT box API base url.
+        '''
         self.base_url = base_url
         self.session = requests.Session()
         # token is incremented before each operation
@@ -21,10 +24,19 @@ class Client(object):
 
     @property
     def token(self):
+        '''Operation token which is incremented before each use'''
         self._token += 1
         return self._token
 
     def login(self, username, password):
+        '''
+        Initiate authenticated session with given credentials
+
+        :param usernam: Username
+        :param password: Password
+
+        :returns: Login request's response
+        '''
         login_data = {
             'myusername': username,
             'mypassword': password,
