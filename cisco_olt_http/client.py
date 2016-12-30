@@ -33,10 +33,10 @@ class Client(object):
         response = self._req('login.htm', data=login_data)
         return response
 
-    def _req(self, url, **options):
+    def _req(self, url, method='POST', **options):
         url = urljoin(self.base_url, url)
         LOGGER.debug('Request to: %s with options: %s', url, options)
-        response = self.session.post(url, **options)
+        response = self.session.request(method, url, **options)
         response.raise_for_status()
         LOGGER.debug(
             'Response status: %s content: %s',

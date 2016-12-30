@@ -13,10 +13,11 @@ class TestClientSimple:
         assert self.client.token == t + 1
 
     def test_login(self, mocker):
-        mocker.patch.object(self.client.session, 'post')
-        self.client.session.post.side_effect = mocker.Mock()
+        mocker.patch.object(self.client.session, 'request')
+        self.client.session.request.side_effect = mocker.Mock()
         self.client.login('username', 'password')
-        self.client.session.post.assert_called_once_with(
+        self.client.session.request.assert_called_once_with(
+            'POST',
             'http://base-url/login.htm',
             data={
                 'myusername': 'username',
