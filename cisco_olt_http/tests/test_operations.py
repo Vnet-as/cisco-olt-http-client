@@ -1,6 +1,7 @@
 
 import os
 import pytest
+import requests
 from cisco_olt_http import operations
 from cisco_olt_http.client import Client
 
@@ -20,11 +21,9 @@ def test_get_data():
 
 class TestOperationResult:
 
-    def test_ok_response(self, data_dir):
+    def test_ok_response(self, data_dir, mocker):
 
-        class Response:
-            pass
-        response = Response()
+        response = mocker.Mock(autospec=requests.Response)
 
         with open(os.path.join(data_dir, 'ok_response.xml')) as of:
             response.content = of.read()
