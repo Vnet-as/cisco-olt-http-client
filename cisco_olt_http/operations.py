@@ -8,13 +8,18 @@ class OperationResult:
         self.response = response
         self.data = xmltodict.parse(response.content)
 
+
+    @property
+    def result(self):
+        return self.data['response']['operation']['result']
+
     @property
     def error(self):
         return int(self.error_code) != 0
 
     @property
     def error_code(self):
-        return self.data['response']['operation']['result']['error']
+        return self.result['@error']
 
 
 class Operation(object):
