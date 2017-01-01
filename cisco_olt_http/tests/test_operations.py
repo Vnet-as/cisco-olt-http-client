@@ -12,6 +12,14 @@ def data_dir():
         os.path.join(os.path.dirname(__file__), 'data'))
 
 
+@pytest.fixture
+def ok_response(data_dir, mocker):
+    response = mocker.Mock(autospec=requests.Response)
+    with open(os.path.join(data_dir, 'ok_response.xml')) as of:
+        response.content = of.read()
+    return response
+
+
 def test_get_data():
     client = Client('http://base-url')
     show_equipment_op = operations.ShowEquipmentOp(client)
@@ -21,14 +29,7 @@ def test_get_data():
 
 class TestOperationResult:
 
-    def test_ok_response(self, data_dir, mocker):
-
-        response = mocker.Mock(autospec=requests.Response)
-
-        with open(os.path.join(data_dir, 'ok_response.xml')) as of:
-            response.content = of.read()
-
-        operation_result = operations.OperationResult(response)
-
+    def test_ok_response(self, ok_response):
+        operation_result = operations.OperationResult(ok_response)
         assert not operation_result.error
         assert operation_result.error_str == 'OK'
