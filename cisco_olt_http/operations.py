@@ -21,6 +21,10 @@ class OperationResult:
     def error_code(self):
         return self.result['@error']
 
+    @property
+    def error_str(self):
+        return self.result['@errorStr']
+
 
 class Operation(object):
     '''Base class for API operations'''

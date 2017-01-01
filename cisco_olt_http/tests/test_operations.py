@@ -32,3 +32,4 @@ class TestOperationResult:
         operation_result = operations.OperationResult(response)
 
         assert not operation_result.error
+        assert operation_result.error_str == 'OK'
