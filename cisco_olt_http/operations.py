@@ -5,13 +5,18 @@ import xmltodict
 class OperationResult:
 
     def __init__(self, response):
+        #: Raw Http response (:class:`requests.Response`)
         self.response = response
+        #: Full, parsed xml from http response
         self.data = xmltodict.parse(response.content)
 
+    @property
+    def operation(self):
+        return self.data['response']['operation']
 
     @property
     def result(self):
-        return self.data['response']['operation']['result']
+        return self.operation['result']
 
     @property
     def error(self):
