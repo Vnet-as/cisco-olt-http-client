@@ -102,3 +102,6 @@ class Operation(object):
 
 class ShowEquipmentOp(Operation):
     op_data = {'@entity': 'equipment', 'equipment': None}
+
+class ShowInterfacesOp(Operation):
+    op_data = {'@entity': 'interface', 'interface': {'@equipmentId': 0}}
