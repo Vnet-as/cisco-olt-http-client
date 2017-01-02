@@ -100,6 +100,11 @@ class Operation(object):
         return OperationResult(response)
 
 
+class ConfigOperation(Operation):
+    '''Base class for configuration changing operations'''
+    op_type = 'config'
+
+
 class ShowEquipmentOp(Operation):
     op_data = {'@entity': 'equipment', 'equipment': None}
 
