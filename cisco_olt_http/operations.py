@@ -47,13 +47,14 @@ class Operation(object):
         self.client = client
 
     def get_base_data(self):
+        '''Returns request base data'''
+        return {'request': {'operation': self.get_op_base_data()}}
+
+    def get_op_base_data(self):
+        '''Returns operation base data'''
         return {
-            'request': {
-                'operation': {
-                    '@token': self.get_token(),
-                    '@type': self.get_type(),
-                }
-            }
+            '@token': self.get_token(),
+            '@type': self.get_type(),
         }
 
     def get_data(self, data=None):
