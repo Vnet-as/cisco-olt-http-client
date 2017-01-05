@@ -3,8 +3,39 @@ import xmltodict
 
 
 class OperationResult:
+    '''
+    Single operation result class
+
+    Represents XML API response of format like:
+
+
+    .. code-block:: xml
+
+        <?xml version='1.0' encoding='utf-8'?>
+        <response timestamp='1483627466' localDate='2017/01/05'
+                  localTime='14:44:26' version='3.6.3-r5162' >
+           <operation token='1' type='show' entity='card' >
+              <cardList>
+                 <card equipmentId='0' id='0' type='0' admin='0' version=''
+                       serialNumber='' status='0' hwType='0' hwMode='0'
+                       mode='0' name='unknown'>
+                 </card>
+                 <card equipmentId='0' id='1' type='20213' admin='1' version='PCB 3.2'
+                       serialNumber='8010100196' status='3' hwType='20213' hwMode='0'
+                       mode='0' name='ME4601-OLT'>
+                 </card>
+              </cardList>
+              <result error='00000000' errorStr='OK'/>
+           </operation>
+        </response>
+
+    '''
 
     def __init__(self, response):
+        '''
+        :param response: requests response class with xml result content
+        :type response: :class:`request.Response`
+        '''
         #: Raw Http response (:class:`requests.Response`)
         self.response = response
         #: Full, parsed xml from http response
