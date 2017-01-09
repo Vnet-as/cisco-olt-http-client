@@ -124,7 +124,7 @@ class Operation(object):
         :param data: Operation related data pased to ``get_data`` method
         :type data: dict or None
 
-        :returns: Parsed API response as dictionary
+        :returns: OperationResult
         '''
         response = self.client._req(
             url=self.url,
