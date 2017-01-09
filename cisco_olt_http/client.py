@@ -45,6 +45,20 @@ class Client(object):
         response = self._req('login.htm', data=login_data)
         return response
 
+    def execute(self, op, data=None):
+        '''
+        Execute API request operation with given operation ``data``.
+
+        :param op: Operation class
+        :type op: class (type)
+
+        :param data: Operation ralted data pased
+        :type data: dickt or None
+
+        :returns: OperationResult
+        '''
+        return op(self).execute(data=data)
+
     def _req(self, url, method='POST', **options):
         url = urljoin(self.base_url, url)
         LOGGER.debug('Request to: %s with options: %s', url, options)
