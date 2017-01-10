@@ -1,13 +1,11 @@
-
 import xmltodict
 
 
-class OperationResult:
+class Response:
     '''
-    Single operation result class
+    Class representing response to operation request
 
     Represents XML API response of format like:
-
 
     .. code-block:: xml
 
@@ -29,6 +27,8 @@ class OperationResult:
            </operation>
         </response>
 
+    *Response contains same number of operations as related request (may be more than 1).*
+
     '''
 
     def __init__(self, response):
@@ -42,12 +42,27 @@ class OperationResult:
         self.data = xmltodict.parse(response.content)
 
     @property
-    def operation(self):
-        return self.data['response']['operation']
+    def operations(self):
+        operations = self.data['response']['operation']
+        if not isinstance(operations, list):
+            operations = [operations]
+        return [OperationResult(op) for op in operations]
+
+
+class OperationResult:
+    '''
+    Single operation result class
+
+    Represents result of single operation from parsed XML API response
+
+    '''
+
+    def __init__(self, operation):
+        self.data = operation
 
     @property
     def result(self):
-        return self.operation['result']
+        return self.data['result']
 
     @property
     def error(self):
@@ -121,7 +136,7 @@ class Operation(object):
         '''
         Execute API request operation with given operation ``data``
 
-        :param data: Operation related data pased to ``get_data`` method
+        :param data: Operation related data passed to ``get_data`` method
         :type data: dict or None
 
         :returns: OperationResult
@@ -129,7 +144,54 @@ class Operation(object):
         response = self.client._req(
             url=self.url,
             data=xmltodict.unparse(self.get_data(data=data)))
-        return OperationResult(response)
+        return Response(response)
+
+
+class BulkOperation(object):
+    '''Class for executing multiple operations at once'''
+
+    #: Relative url to the client's ``base_url``. Operation endpoint url
+    url = '/cgi-bin/xml-parser.cgi'
+
+    def __init__(self, client):
+        self.client = client
+        self.operations = []
+
+    def add_operation(self, op, data=None):
+        '''
+        Add operation and optional data to bulk operation
+
+        :param op: Operation class (not instance)
+        :type op: subclass of ``Operation``
+        :param data: Operation related data passed to operation's ``get_data`` method
+        :type data: dict or None
+        '''
+        self.operations.append((op, data))
+
+    def get_data(self):
+        return {
+            'request': {
+                'operation': [
+                    op(self.client).get_data(data=data)['request']['operation']
+                    for op, data in self.operations
+                ]
+            }
+        }
+
+    def execute(self):
+        '''
+        Execute API request operation with given operation ``data``
+
+        :param data: Operation related data pased to ``get_data`` method
+        :type data: dict or None
+
+        :returns: OperationResult
+        '''
+        print(self.get_data())
+        response = self.client._req(
+            url=self.url,
+            data=xmltodict.unparse(self.get_data()))
+        return Response(response)
 
 
 class ConfigOperation(Operation):
