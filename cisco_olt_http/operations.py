@@ -187,7 +187,6 @@ class BulkOperation(object):
 
         :returns: OperationResult
         '''
-        print(self.get_data())
         response = self.client._req(
             url=self.url,
             data=xmltodict.unparse(self.get_data()))
