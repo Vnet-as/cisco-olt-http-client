@@ -35,16 +35,16 @@ Usage
     # unfortunately for now, there's no way to know if login was successful
     client.login('username', 'password')
 
-    result = client.execute(ShowInterfacesOp)
-    pprint.pprint(dict(result.operations[0]))
-    pprint.pprint(result.error)
+    response = client.execute(ShowInterfacesOp)
+    pprint.pprint(dict(response.operations[0].result))
+    pprint.pprint(response.operations[0].error)
 
     # or
 
     cmd = ShowInterfacesOp(client)
-    result = cmd.execute()
-    pprint.pprint(dict(result.operations[0]))
-    pprint.pprint(result.error)
+    response = cmd.execute()
+    pprint.pprint(dict(response.operations[0].result))
+    pprint.pprint(response.operations[0].error)
 
     # also bulk operations are supported
 
@@ -52,9 +52,7 @@ Usage
     bulk_op.add_operation(ShowInterfacesOp, {'@equipmentId': 1})
     bulk_op.add_operation(ShowInterfacesOp, {'@equipmentId': 2})
     bulk_op.add_operation(ShowEquipmentOp)
-    result = bulk_op.execute()
+    response = bulk_op.execute()
 
-    pprint.pprint(result.error)
-    for res in result.operations:
-        pprint.pprint(dict(res))
-
+    for op in response.operations:
+        pprint.pprint(dict(op.result))
